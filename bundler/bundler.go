@@ -79,7 +79,7 @@ func clearExistingBundle(bundleName string) {
 		fmt.Println("could not determine existence of a previous PDF by the name " + bundleName)
 		return
 	}
-	if err = os.Remove(pdfOutputPath + "/" + bundleName); err != nil {
+	if err = os.Remove(pdfOutputPath + "/" + bundleName + ".pdf"); err != nil {
 		fmt.Println("could not remove the previous PDF by the name " + bundleName)
 	}
 	return
