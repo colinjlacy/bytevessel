@@ -71,10 +71,9 @@ func getBundleName(path string) (string, error) {
 }
 
 func clearExistingBundle(bundleName string) {
-	_, err := os.Stat(pdfOutputPath + "/" + bundleName)
+	_, err := os.Stat(pdfOutputPath + "/" + bundleName + ".pdf")
 	if err != nil {
 		if os.IsNotExist(err) {
-			fmt.Println("no bundle existed at " + pdfOutputPath + "/" + bundleName)
 			return
 		}
 		fmt.Println("could not determine existence of a previous PDF by the name " + bundleName)
