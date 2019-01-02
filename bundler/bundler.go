@@ -25,7 +25,7 @@ func Bundle(foldername string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	clearExistingPdf(foldername)
+	clearExistingBundle(foldername)
 	comm := api.ImportImagesCommand(names, out, imp, conf)
 	_, err = api.ImportImages(comm)
 	if err != nil {
@@ -70,17 +70,18 @@ func getBundleName(path string) (string, error) {
 	return pdfOutputPath + "/" + s[len(s) -1] + ".pdf", nil
 }
 
-func clearExistingPdf(pdfFileName string) {
-	_, err := os.Stat(pdfOutputPath + "/" + pdfFileName)
+func clearExistingBundle(bundleName string) {
+	_, err := os.Stat(pdfOutputPath + "/" + bundleName)
 	if err != nil {
 		if os.IsNotExist(err) {
+			fmt.Println("no bundle existed at " + pdfOutputPath + "/" + bundleName)
 			return
 		}
-		fmt.Println("could not determine existence of a previous PDF by the name " + pdfFileName)
+		fmt.Println("could not determine existence of a previous PDF by the name " + bundleName)
 		return
 	}
-	if err = os.Remove(pdfOutputPath + "/" + pdfFileName); err != nil {
-		fmt.Println("could not remove the previous PDF by the name " + pdfFileName)
+	if err = os.Remove(pdfOutputPath + "/" + bundleName); err != nil {
+		fmt.Println("could not remove the previous PDF by the name " + bundleName)
 	}
 	return
 }
