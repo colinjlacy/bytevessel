@@ -12,12 +12,12 @@ import (
 )
 
 type EmailRequest struct {
-	Foldername   string `json: foldername`
+	FolderName   string `json: folderName`
 	EmailAddress string `json: emailAddress`
 }
 
 type CloudRequest struct {
-	Foldername  string `json: foldername`
+	Foldername  string `json: folderName`
 	Destination string `json: destination`
 }
 
@@ -42,7 +42,7 @@ func emailFile(w http.ResponseWriter, r *http.Request) {
 	// parse req body
 	var params EmailRequest
 	_ = json.NewDecoder(r.Body).Decode(&params)
-	filepath, err := bundler.Bundle(params.Foldername)
+	filepath, err := bundler.Bundle(params.FolderName)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		jsonData := map[string]string{"error": err.Error()}
