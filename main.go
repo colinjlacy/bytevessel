@@ -21,15 +21,25 @@ type CloudRequest struct {
 	Destination string `json: destination`
 }
 
-var token *string
+var email, password, token *string
 
 func main() {
-	token = flag.String("t", "", "the auth token to use with this application")
+	// TODO should be passed via env vars
+	// TODO authorize the app to use the service email account properly
+	email = flag.String("e", "", "the email address you'd like to use to send scan files")
+	password = flag.String("p", "", "the password to access the specified email address")
+	token = flag.String("t", "", "the cloud storage auth token to use with this application")
 	flag.Parse()
 
 	// TODO: add user auth so that other users can add their dropbox account
 	if *token == "" {
 		log.Fatal("You'll need to provide a cloud token in order to use this application")
+	}
+	if *email == "" {
+		log.Fatal("You must provide an email address in order to use this application")
+	}
+	if *password == "" {
+		log.Fatal("You must provide an email password in order to use this application")
 	}
 
 	router := mux.NewRouter()
@@ -49,7 +59,7 @@ func emailFile(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(jsonData)
 		return
 	}
-	if err := emailer.EmailFile(filepath, params.EmailAddress); err != nil {
+	if err := emailer.EmailFile(filepath, params.EmailAddress, *email, *password); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		jsonData := map[string]string{"error": err.Error()}
 		_ = json.NewEncoder(w).Encode(jsonData)

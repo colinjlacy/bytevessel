@@ -7,17 +7,11 @@ import (
 	"net/smtp"
 )
 
-// TODO should be passed via env vars
-// TODO authorize the app to use the service email account properly
-//var keyFilePath = "./reborne-key.json"
-const SENDER_EMAIL_ADDRESS = "lacy.family.scanner@gmail.com"
-const SENDER_EMAIL_PASSWORD = "iPrintAndScan"
-
-func EmailFile(filepath string, address string) error {
+func EmailFile(filepath, targetAddress, fromEmail, fromPassword string) error {
 	// compose the message
 	m := email.NewMessage("Hi", "this is the body")
-	m.From = mail.Address{Name: "Scanner", Address: SENDER_EMAIL_ADDRESS}
-	m.To = []string{address}
+	m.From = mail.Address{Name: "Scanner", Address: fromEmail}
+	m.To = []string{targetAddress}
 
 	// add attachments
 	if err := m.Attach(filepath); err != nil {
@@ -25,7 +19,7 @@ func EmailFile(filepath string, address string) error {
 	}
 
 	// send it
-	auth := smtp.PlainAuth("", SENDER_EMAIL_ADDRESS, SENDER_EMAIL_PASSWORD, "smtp.gmail.com")
+	auth := smtp.PlainAuth("", fromEmail, fromPassword, "smtp.gmail.com")
 	if err := email.Send("smtp.gmail.com:587", auth, m); err != nil {
 		return fmt.Errorf("could not send email: %s", err)
 	}
